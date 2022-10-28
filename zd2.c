@@ -20,7 +20,9 @@ void UnosK(Position P);
 void Ispis(Position P);
 Position TraziPoPrez(Position P);
 Position TraziPret(Position P);
-int Brisi(Position P);
+void Brisi(Position P);
+
+void UnosIza(Position P);
 
 int main(void)
 {
@@ -42,7 +44,7 @@ int main(void)
         printf("3 - Dodavanje novog elementa na kraj liste\n");
         printf("4 - Pronalazak elementa u listi (po prezimenu)\n");
         printf("5 - Brisanje odredenog elementa iz liste\n");
-        printf("\n0 - Izlazak iz programa");
+        printf("\n0 - Izlazak iz programa\n \n");
 
         scanf("%d",&odabir);
 
@@ -55,14 +57,14 @@ int main(void)
                 Ispis(head.next);
                 break;
             case 3:
-                UnosK(head.next);
+                UnosK(&head);
                 break;
             case 4:
                 q=TraziPoPrez(head.next);
                 if(q==NULL)
                     printf("\n Osoba ne postoji u listi!");
 			    else
-				    printf("\n\tOsoba je: %s %s, %d", q->ime, q->prezime,q->godRod);
+				    printf("\nOsoba je: %s %s, %d\n", q->ime, q->prezime,q->godRod);
                 break;
             case 5: 
                 Brisi(&head);
@@ -119,6 +121,7 @@ void Ispis(Position P)
 void UnosK(Position P)
 {
     Position q;
+    q = (Position)malloc(sizeof(struct _osoba));
     printf("\nUnesite podatke o novoj osobi: ");
     scanf("%s %s %d",q->ime,q->prezime,&q->godRod);
     
@@ -126,27 +129,29 @@ void UnosK(Position P)
     {
             P=P->next;
     }
-    q = (Position)malloc(sizeof(struct _osoba));
     //q->ime = 
     q->next = P->next;
     P->next =q;
+    //q->next=NULL;
+   
 
 }
 
 Position TraziPoPrez(Position P)
 {
-    char temp_p;
+    char temp_p[MAX_NAME];
     printf("\nUnesi prezime osobe koju zelis pronaci: ");
 	scanf(" %s", temp_p);
 
-    //while(P != NULL && strcmpi(P->prezime, temp_p)!= 0) 
-    while(P!=NULL && P->prezime==temp_p)
-		P = P->next;
+    while(P != NULL && strcmpi(P->prezime, temp_p)!= 0) 
+    P = P->next;
+    //while(P!=NULL && P->prezime!=temp_p)
+	//	P = P->next;
 
 	return P;
 }
 
-int Brisi(Position P)
+void Brisi(Position P)
 {
     Position prev,temp;
 
@@ -154,34 +159,39 @@ int Brisi(Position P)
 
     if(NULL==prev)
     {
-        printf("Nema ga");
-        return EXIT_ERROR;
+        printf("Nema ga\n");
+        //return EXIT_ERROR;
     }
     else{
         temp=prev->next;
         temp=prev->next;
         temp=temp->next;
         free(temp);
-        return EXIT_SUCCESS;
+        //return EXIT_SUCCESS;
     }
 }
 
 Position TraziPret(Position P)
 {
     char temp_p[MAX_NAME];
-    //else{
-        printf("Unesite prezime osobe koju zelite izbrisati: ");
-        scanf("%s",temp_p);
-    //}
-    
 
-    while(P->next!=NULL && P->next->prezime!=temp_p)
-        P=P->next; 
-    
-    if(P->next == NULL)
+     if(P->next == NULL)
         P==NULL;
-    else
+    else{
+        printf("Unesite prezime osobe koju zelite izbrisati: ");
+        scanf(" %s",temp_p);
+    while(P->next->next!=NULL && strcmpi(P->next->prezime,temp_p)!=0)
+        P=P->next; 
+    }
         return P;
+}
+
+void UnosIza(Position P)
+{
+    Position q;
+
+    printf("");
+
 }
 
 
