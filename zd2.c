@@ -44,6 +44,8 @@ int main(void)
         printf("3 - Dodavanje novog elementa na kraj liste\n");
         printf("4 - Pronalazak elementa u listi (po prezimenu)\n");
         printf("5 - Brisanje odredenog elementa iz liste\n");
+        printf("9 - unos elemenata liste u dadoteku\n");
+        printf("10 - čitanje elemenata iz liste\n)
         printf("\n0 - Izlazak iz programa\n \n");
 
         scanf("%d",&odabir);
@@ -66,9 +68,21 @@ int main(void)
 			    else
 				    printf("\nOsoba je: %s %s, %d\n", q->ime, q->prezime,q->godRod);
                 break;
+
             case 5: 
                 Brisi(&head);
                 break;
+
+            case 9:
+                UnosDad(&head, imedad);
+                break;
+
+            case 10:
+                CitaDad(&head, imedad);
+                break;
+
+            default:
+                printf("Ta opcija ne postoji");
         } 
 
         
