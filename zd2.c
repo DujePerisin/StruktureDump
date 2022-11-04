@@ -20,9 +20,12 @@ void UnosK(Position P);
 void Ispis(Position P);
 Position TraziPoPrez(Position P);
 Position TraziPret(Position P);
-void Brisi(Position P);
+int Brisi(Position P);
+int UnosIza(Position P);
+int UnosIspred(Position P);
+int Sort(Position P);
+int BrisiSve(Position P); 
 
-void UnosIza(Position P);
 
 int main(void)
 {
@@ -44,8 +47,11 @@ int main(void)
         printf("3 - Dodavanje novog elementa na kraj liste\n");
         printf("4 - Pronalazak elementa u listi (po prezimenu)\n");
         printf("5 - Brisanje odredenog elementa iz liste\n");
-        printf("9 - unos elemenata liste u dadoteku\n");
-        printf("10 - čitanje elemenata iz liste\n)
+        printf("6 - Dodavanje novog elementa iza odredenog elementa\n");
+        printf("7 - Dodavanje novog elementa ispred odredenog elementa\n");
+        printf("8 - Sortiranje liste po prezimenima\n");
+        printf("9 - Upis liste u datoteku\n");
+        printf("10 - Citanje liste iz datoteke\n");
         printf("\n0 - Izlazak iz programa\n \n");
 
         scanf("%d",&odabir);
@@ -53,36 +59,47 @@ int main(void)
         switch(odabir)
         {
             case 1: 
+                printf("Odabir 1\n");
                 UnosP(&head);
                 break;
             case 2:
+                printf("Odabir 2\n");
                 Ispis(head.next);
                 break;
             case 3:
+                printf("Odabir 3\n");
                 UnosK(&head);
                 break;
             case 4:
+                printf("Odabir 4\n");
                 q=TraziPoPrez(head.next);
                 if(q==NULL)
                     printf("\n Osoba ne postoji u listi!");
 			    else
 				    printf("\nOsoba je: %s %s, %d\n", q->ime, q->prezime,q->godRod);
                 break;
-
             case 5: 
+                printf("Odabir 5\n");
                 Brisi(&head);
                 break;
-
+            case 6:
+                printf("Odabir 6\n");
+                UnosIza(&head);
+                break;
+            case 7:
+                printf("Odabir 7\n");
+                UnosIspred(&head);
+                break;
+            case 8:
+                printf("Odabir 8\n");
+                Sort(&head);
+                break;
             case 9:
-                UnosDad(&head, imedad);
+                printf("Odabir 9\n");
                 break;
-
             case 10:
-                CitaDad(&head, imedad);
+                printf("Odabir 10\n");
                 break;
-
-            default:
-                printf("Ta opcija ne postoji");
         } 
 
         
@@ -95,6 +112,9 @@ int main(void)
     UnosK(head.next);
     Ispis(head.next);*/
 
+
+    printf("\n \n \n----OSLOBADANJE MEMORIJE----\n");
+	BrisiSve(&head);
 
     return EXIT_SUCCESS;
 }
@@ -126,7 +146,7 @@ void Ispis(Position P)
             printf("\n => %s %s %d",P->ime,P->prezime,P->godRod  );
             P=P->next;
         }
-        
+        printf("\n");
 
 
     }
@@ -165,34 +185,37 @@ Position TraziPoPrez(Position P)
 	return P;
 }
 
-void Brisi(Position P)
+int Brisi(Position P)
 {
-    Position prev,temp;
+    char tempPrezime[MAX_NAME] = { 0 };
+	Position temp = NULL;
 
-    prev = TraziPret(P);
+	printf("Unesite prezime trazene osobe: ");
+	scanf("%s", tempPrezime);
 
-    if(NULL==prev)
-    {
-        printf("Nema ga\n");
-        //return EXIT_ERROR;
-    }
-    else{
-        temp=prev->next;
-        temp=prev->next;
-        temp=temp->next;
-        free(temp);
-        //return EXIT_SUCCESS;
-    }
+	while (P->next != NULL && strcmp(tempPrezime, P->next->prezime) != 0) {
+		P = P->next;
+	}
+	if (strcmp(tempPrezime, P->next->prezime) == 0) {
+		temp = P->next;
+		P->next = temp->next;
+		free(temp);
+	}
+	else {
+		printf("Trazena osoba nije upisana u strukturu");
+		return EXIT_ERROR;
+	}
+	return EXIT_SUCCESS;
 }
 
 Position TraziPret(Position P)
 {
-    char temp_p[MAX_NAME];
+    char temp_p[MAX_NAME] = {0};
 
      if(P->next == NULL)
         P==NULL;
     else{
-        printf("Unesite prezime osobe koju zelite izbrisati: ");
+        printf("Unesite prezime osobe koju zelite izbrisati/pronaci: ");  //dio starog koda kad san priko ove funkcije brisa
         scanf(" %s",temp_p);
     while(P->next->next!=NULL && strcmpi(P->next->prezime,temp_p)!=0)
         P=P->next; 
@@ -200,12 +223,116 @@ Position TraziPret(Position P)
         return P;
 }
 
-void UnosIza(Position P)
+int UnosIza(Position P) 
 {
-    Position q;
+	Position q;
+	char trazenoPrezime[MAX_NAME] = { 0 };
 
-    printf("");
+	q = (Position)malloc(sizeof(struct _osoba));
 
+	if (q == NULL) {
+		printf("Pogreska prilikom alokacije!!!\n");
+		return EXIT_ERROR;
+	}
+
+	printf("Unesite prezime osobe koju zelite pronaci: ");
+	scanf("%s", trazenoPrezime);
+
+	while (P != NULL && strcmp(trazenoPrezime, P->prezime) != 0) {
+		P = P->next;
+	}
+
+	if (strcmp(trazenoPrezime, P->prezime) == 0) {
+		//UnosP(q);                                         //zbog nove dek. memorije ne zeli ?
+        printf("\nUnesite podatke o novoj osobi: ");
+        scanf("%s %s %d",q->ime,q->prezime,&q->godRod);
+		q->next = P->next;
+		P->next = q;
+	}
+	else {
+		printf("Nije pronadena trazena osoba!");
+		return EXIT_ERROR;
+	}
+	return EXIT_SUCCESS;
 }
+
+int UnosIspred(Position P) 
+{
+	Position q;
+	char trazenoPrezime[MAX_NAME] = { 0 };
+
+	q = (Position)malloc(sizeof(struct _osoba));
+
+	if (q == NULL) {
+		printf("Pogreska prilikom alokacije!!!\n");
+		return EXIT_ERROR;
+	}
+
+	printf("Unesite prezime osobe koju zelite pronaci: ");
+	scanf("%s", trazenoPrezime);
+
+	while (P->next != NULL && strcmp(trazenoPrezime, P->next->prezime) != 0) {
+		P = P->next;
+	}
+
+	if (strcmp(trazenoPrezime, P->next->prezime) == 0) {
+		//UnosP(q);                                                 //zbog nove dek. memorije ne zeli ?
+        printf("\nUnesite podatke o novoj osobi: ");
+        scanf("%s %s %d",q->ime,q->prezime,&q->godRod);
+		q->next = P->next;
+		P->next = q;
+	}
+	else {
+		printf("Nije pronadena trazena osoba!");
+		return EXIT_ERROR;
+	}
+	return EXIT_SUCCESS;
+}
+
+int Sort(Position P) //mjehuric sort - inace se ne koristi
+{																
+	Position q, prev_q, temp, end;
+	
+	q = (Position)malloc(sizeof(struct _osoba));
+
+	if (q == NULL) {
+		printf("Pogreska prilikom alokacije!!!\n");
+		return EXIT_ERROR;
+	}
+	
+	end = NULL;
+
+	while (P->next != end) {
+		prev_q = P;
+		q = P->next;
+		while (q->next != end) {
+			if (strcmp(q->prezime, q->next->prezime) > 0) {
+				temp = q->next;
+				prev_q->next = temp;
+				q->next = temp->next;
+				temp->next = q;
+
+				q = temp;
+			}
+			prev_q = q;
+			q = q->next;
+		}
+		end = q;
+	}
+	return EXIT_SUCCESS;
+}
+
+int BrisiSve(Position P) 
+{
+	Position temp;
+	while (P->next != NULL)
+	{
+		temp = P->next;
+		P->next = temp->next;
+		free(temp);
+	}
+	return EXIT_SUCCESS;
+}
+
 
 
