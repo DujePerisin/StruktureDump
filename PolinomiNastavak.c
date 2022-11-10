@@ -12,6 +12,7 @@ typdef struct polinom {
 
 int UnosPolinoma(Position P1, Position P2, FILE* pok_na_dad);
 int ZbrojPolinoma(Position P1, Position P2, Position PR);
+int Ispis(Position P);
 
 int main(){
      /*nisam sigurna je li dadoteka postoji ili je treba stvoriti, idem s 
@@ -52,6 +53,7 @@ int main(){
     koju dobijemo zbrajanjem prethodne dvije*/
     
     ZbrojPolinoma(&head,&Head,&RHead);
+    Ispis(&RHead);
     
     return EXIT_SUCCESS;
 }
@@ -111,8 +113,28 @@ int ZbrojPolinoma(Position P1, Position P2, Position PR){
         }
     }
     
-    if(PR->next == NULL)
+    if(PR == NULL)
         return EXIT_ERROR;
     else
         return EXIT_SUCCESS;
+}
+
+int Ispis(Position PR)
+{
+
+    if(PR == NULL)
+        printf("\nOva lista je prazna")
+        return EXIT_ERROR;
+    else
+    {
+        printf("\nIspis liste: \n");
+        while (P!=NULL)
+        {
+            printf("\n => %s %s %d",P->ime,P->prezime,P->godRod  );
+            P=P->next;
+        }
+        printf("\n");
+        return EXIT_SUCCESS;
+
+    }
 }
