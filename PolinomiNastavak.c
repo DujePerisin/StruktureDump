@@ -127,11 +127,11 @@ int Ispis(Position PR)
         return EXIT_ERROR;
     else
     {
-        printf("\nIspis liste: \n");
-        while (P!=NULL)
+        printf("\nIspis rezultantnog polinoma: \n");
+        while (PR!=NULL)
         {
-            printf("\n => %s %s %d",P->ime,P->prezime,P->godRod  );
-            P=P->next;
+            printf("\n %d %d", &PR.koef, &PR.eksp);
+            PR=PR->next;
         }
         printf("\n");
         return EXIT_SUCCESS;
