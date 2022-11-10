@@ -15,9 +15,9 @@ typedef struct _osoba {
     Position next;
 } Osoba;
 
-void UnosP(Position P);
-void UnosK(Position P);
-void Ispis(Position P);
+int UnosP(Position P);
+int UnosK(Position P);
+int Ispis(Position P);
 Position TraziPoPrez(Position P);
 Position TraziPret(Position P);
 int Brisi(Position P);
@@ -25,6 +25,8 @@ int UnosIza(Position P);
 int UnosIspred(Position P);
 int Sort(Position P);
 int BrisiSve(Position P); 
+int IspisDat(Position P);
+int UnosDat(Position P);
 
 
 int main(void)
@@ -96,21 +98,16 @@ int main(void)
                 break;
             case 9:
                 printf("Odabir 9\n");
+				UnosDat(head.next);
                 break;
             case 10:
                 printf("Odabir 10\n");
+				IspisDat(head.next);
                 break;
         } 
 
         
     }
-
-    /*UnosP(&head);
-    UnosP(&head);
-    UnosP(&head);
-    //Ispis(head.next);
-    UnosK(head.next);
-    Ispis(head.next);*/
 
 
     printf("\n \n \n----OSLOBADANJE MEMORIJE----\n");
@@ -120,7 +117,7 @@ int main(void)
 }
 
 
-void UnosP(Position P)
+int UnosP(Position P)
 {
     
     Position q;
@@ -131,28 +128,31 @@ void UnosP(Position P)
     //q->El.x;
     q->next = P->next;
     P->next = q;
+	return EXIT_SUCCESS;
 }
 
-void Ispis(Position P)
+int Ispis(Position P)
 {
 
-    if(P == NULL)
-        printf("\nOva lista je prazna");
+    if(P == NULL){
+        printf("\nOva lista je prazna\n");
+		return EXIT_ERROR;
+	}
     else
     {
         printf("\nIspis liste: \n");
         while (P!=NULL)
         {
-            printf("\n => %s %s %d",P->ime,P->prezime,P->godRod  );
+            printf("\n =>\nIme: %s\nPrezime: %s\nGodine: %d",P->ime,P->prezime,P->godRod  );
             P=P->next;
         }
         printf("\n");
 
-
+		return EXIT_SUCCESS;
     }
 }
 
-void UnosK(Position P)
+int UnosK(Position P)
 {
     Position q;
     q = (Position)malloc(sizeof(struct _osoba));
@@ -163,12 +163,9 @@ void UnosK(Position P)
     {
             P=P->next;
     }
-    //q->ime = 
     q->next = P->next;
     P->next =q;
-    //q->next=NULL;
-   
-
+	return EXIT_SUCCESS;
 }
 
 Position TraziPoPrez(Position P)
@@ -179,9 +176,6 @@ Position TraziPoPrez(Position P)
 
     while(P != NULL && strcmpi(P->prezime, temp_p)!= 0) 
     P = P->next;
-    //while(P!=NULL && P->prezime!=temp_p)
-	//	P = P->next;
-
 	return P;
 }
 
@@ -335,4 +329,46 @@ int BrisiSve(Position P)
 }
 
 
+
+int UnosDat(Position P) {
+
+	FILE* fp = NULL;					//baca error ali program radi --internet kaze da je sve ok
+
+
+	fp = fopen("dat.txt", "w");
+	if (NULL == fp) {
+		printf("GRESKA!! \nDokument dat.txt se nije otvorio!\r\n");
+		return EXIT_ERROR;
+	}
+
+	while (P != NULL) {
+		fprintf(fp, "\nIme: %s\nPrezime: %s\nGodina: %d\n",P->ime, P->prezime, P->godRod);
+		P = P->next;
+	}
+	fclose(fp);
+	return EXIT_SUCCESS;
+}
+
+int IspisDat(Position P) {
+	char ime[MAX_NAME] = { 0 };
+	char prezime[MAX_NAME] = { 0 };
+	int godina = 0;
+	
+	FILE* fp = NULL;					//baca error ali program radi --internet kaze da je sve ok
+
+	fp = fopen("dat.txt", "r");
+	if (NULL == fp) {
+		printf("GRESKA!! \nDokument dat.txt se nije otvorio!\r\n");
+		return EXIT_ERROR;
+	}
+
+	while (P != NULL) {
+		fscanf(fp, "\nIme: %s\nPrezime: %s\nGodina: %d\n", &ime, &prezime, &godina);
+		printf("\nIme: %s\nPrezime: %s\nGodina: %d\n", ime, prezime, godina);
+		P = P->next;
+	}
+	fclose(fp);
+
+	return EXIT_SUCCESS;
+}
 
