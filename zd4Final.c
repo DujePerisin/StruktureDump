@@ -151,7 +151,8 @@ int SumaPolinoma(Position P1,Position P2,Position S)
     {
         q = (Position)malloc(sizeof(struct _polinom));
         q->next = NULL;
-        q->eksponent = temp->koeficijent;
+        q->eksponent = temp->eksponent;
+	q->koeficijent = temp -> koeficijent;
         S->next = q;
         S = q;
         temp = temp->next;
