@@ -81,7 +81,6 @@ int main(void)
             LevelorderIspis(root);
             break;
         case 8:
-            system("cls");
             Print(root);
             break;
         case 0:
