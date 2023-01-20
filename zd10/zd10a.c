@@ -37,6 +37,7 @@ int readFromFile(char fileName[], linkedList states);
 int readFromAdditionalFile(position_list head, char additionalFile[]);
 int printInorder(position_tree root);
 position_tree creteTreeElement(char cityName[], int peopleNumb);
+position_list findStateByName(linkedList states, char stateName[]);
 position_tree insertIntoTree(position_tree root, char cityName[], int population);
 position_tree findCityByName(position_tree current, char cityName[]);
 int Menu(linkedList states);
@@ -53,7 +54,7 @@ int main()
 
     printf("\nLista drzava:");
     printList(states);
-
+    printf("Ovo je states.next %p", states.next);
     Menu(states);
 
     return EXIT_SUCCESS;
@@ -310,14 +311,19 @@ position_list findStateByName(linkedList states, char stateName[])
     }
 
     current = states.next;
-
+    printf("Ovo je states.next %p", states.next);
+    printf("Ovo je current->next %s", current->next); //izbaci Austrija što je ok je to ono na što poazuje header liste
     while (current->next != NULL && (strcmp(current->stateName, stateName))){
         current = current->next;
+        //printf("Ovo je current %s", current); printa Austrija
+        //printf("Ovo je current->next %s", current->next); printa Hrvatska
 
-    if ((strcmp(stateName, current->next->stateName)))
+    if ((strcmp(stateName, current->next->stateName))) //stavimo ! ispred strcmp tako da kad dođe IRska strcmp vrati 0 koja onda postane 1 i aktiira if blok koji u return ima current->next
     {
-
+        
         printf("Drzava ne postoji!\n");
+        printf("Ovo je stateName %s", stateName); //ako unesem Irska ovo kaže da je stateName Irska i to je dobro
+        printf("Ovo je current->next->stateName %s", current->next->stateName); //ali pri ispisu ovoga kaže Hrvatska, zato strcmp ne vraća 0 i aktivira if blok, RH je prethodnik Irske
         return NULL;
     }
     }
@@ -395,8 +401,8 @@ int Menu(linkedList states)
             scanf(" %s", stateName);
 
             currentList = findStateByName(states, stateName);
-
-            if (!currentList)
+            //printf("Ovo je currentList %p", currentList); ispisuje NULL znači u ovom trenu ovdje currentList je prazan član, a ne bi smio biti
+            if (!currentList) //ako se umjesto ovog stavi if(currentList) if se preskače i izvršava se else s time da piše "Država NULL je pronađena!"
                 printf("\n\tTa drzava ne postoji!\n");
 
             else
